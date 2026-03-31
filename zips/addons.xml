@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<addons>
+<addon id="plugin.video.fanfilm" name="FanFilm" version="2026.03.23.1" provider-name="FF Team">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.requests"/>
+        <import addon="script.module.future"/>
+        <import addon="plugin.video.youtube" optional="true"/>
+        <import addon="script.module.pyxbmct"/>
+        <import addon="script.module.resolveurl"/>
+        <import addon="script.fanfilm.media" version="2026.03.01.0"/>
+        <import addon="script.module.inputstreamhelper"/>
+        <import addon="script.module.myconnpy"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <!-- <extension point="xbmc.python.script" library="script.py" /> -->
+    <extension point="xbmc.service" library="service.py" start="startup"/>
+    <extension point="kodi.context.item">
+      <menu id="kodi.core.main">
+        <item library="epg.py">
+          <label lang="pl">Szukaj w FanFilm</label>
+          <visible>String.StartsWith(ListItem.FolderPath,pvr://) + !String.IsEmpty(ListItem.ChannelName)</visible>
+        </item>
+      </menu>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <reuselanguageinvoker>true</reuselanguageinvoker>
+        <summary lang="pl">FanFilm</summary>
+        <description lang="pl">Plugin z filmami i serialami.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+        <news>
+        </news>
+    </extension>
+</addon>
+<addon id="script.fanfilm.media" version="2026.03.01.0" name="FanFilm Themepack" provider-name="FF Team">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.module" library="lib"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>Themes for the FanFilm Addon</summary>
+        <description></description>
+        <platform>all</platform>
+    </extension>
+</addon>
+<addon id="repository.fanfilm" name="FanFilm Repository" version="1.0" provider-name="FF Team">
+    <extension point="xbmc.addon.repository" name="FanFilm Repository">
+        <dir minversion="19.90">
+            <info compressed="false">https://fanfilm-pl.github.io/repository.fanfilm/zips/addons.xml</info>
+            <checksum  verify="sha256">https://fanfilm-pl.github.io/repository.fanfilm/zips/addons.xml.sha256</checksum>
+            <datadir zip="true">https://fanfilm-pl.github.io/repository.fanfilm/zips/</datadir>
+            <hashes>sha256</hashes>
+        </dir>
+        <dir>
+            <info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>FanFilm Repository</summary>
+        <summary lang="pl_PL">Repozytorium FanFilm</summary>
+        <description>Repository with stable versions</description>
+        <description lang="pl_PL">Repozytorium z wersjami stabilnymi</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
+</addons>
