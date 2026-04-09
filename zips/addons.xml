@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <addons>
-<addon id="plugin.video.fanfilm" name="FanFilm" version="2026.03.23.1" provider-name="FF Team">
+<addon id="plugin.video.fanfilm" name="FanFilm" version="2026.04.01.0" provider-name="FF Team">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
@@ -8,7 +8,7 @@
         <import addon="plugin.video.youtube" optional="true"/>
         <import addon="script.module.pyxbmct"/>
         <import addon="script.module.resolveurl"/>
-        <import addon="script.fanfilm.media" version="2026.03.01.0"/>
+        <import addon="script.fanfilm.media" version="2026.04.01.0"/>
         <import addon="script.module.inputstreamhelper"/>
         <import addon="script.module.myconnpy"/>
     </requires>
@@ -38,7 +38,7 @@
         </news>
     </extension>
 </addon>
-<addon id="script.fanfilm.media" version="2026.03.01.0" name="FanFilm Themepack" provider-name="FF Team">
+<addon id="script.fanfilm.media" version="2026.04.01.0" name="FanFilm Themepack" provider-name="FF Team">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
