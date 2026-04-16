@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         FanFilm
 // @namespace    http://tampermonkey.net/
-// @version      0.1.20260307.0
+// @version      0.1.20260409.0
 // @description  Web service
 // @author       kpl-team
 // @match        http*://cda-hd.cc/*
-// @match        http*://vizjer.com/*
 // @match        http*://zaluknij.cc/*
 // @icon         https://raw.githubusercontent.com/fanfilm-pl/repository.fanfilm/refs/heads/main/favicon.png
 // @downloadURL  https://raw.githubusercontent.com/fanfilm-pl/repository.fanfilm/refs/heads/main/fanfilm.user.js
