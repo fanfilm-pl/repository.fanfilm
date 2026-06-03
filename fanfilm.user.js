@@ -1,16 +1,13 @@
 // ==UserScript==
 // @name         FanFilm
 // @namespace    http://tampermonkey.net/
-// @version      0.1.20260507.0
+// @version      0.1.20260530.0
 // @description  Web service
 // @author       kpl-team
 // @match        http*://cda-hd.cc/*
 // @match        http*://zaluknij.cc/*
-// @match        http*://ekino.ws/*
-// @match        http*://ekino-tv.pl/*
-// @match        http*://filman.cc/*
-// @match        http*://net52.cc/*
-// @match        http*://net22.cc/*
+// @include      http*://ekino*.*/*
+// @include      http*://net*.cc/*
 // @icon         https://raw.githubusercontent.com/fanfilm-pl/repository.fanfilm/refs/heads/main/favicon.png
 // @downloadURL  https://raw.githubusercontent.com/fanfilm-pl/repository.fanfilm/refs/heads/main/fanfilm.user.js
 // @updateURL    https://raw.githubusercontent.com/fanfilm-pl/repository.fanfilm/refs/heads/main/fanfilm.user.js
