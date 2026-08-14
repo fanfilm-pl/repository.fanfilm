@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FanFilm
 // @namespace    http://tampermonkey.net/
-// @version      0.1.20260721.1
+// @version      0.1.20260805.1
 // @description  Web service
 // @author       kpl-team
 // @match        http*://imdb.com/*
@@ -259,17 +259,22 @@ function fanfilmUpdateNetmirrorOtp()
     if (!digits) {
         return false;
     }
-    const data = {host: 'netmirror.gg', cookies: [{name: 'otp_code', value: digits.join('')}]};
-    for (const host of fanfilmHosts()) {
-        GM.xmlHttpRequest({
-            method: "POST",
-            url: `http://${host}/cookies`,
-            data: JSON.stringify(data),
-            headers: {"Content-Type": "application/json;charset=UTF-8"},
-            onload: () => fanfilmMessage('success', '✅ Wysłano'),
-            onerror: () => fanfilmMessage('error', '❌ Błąd wysyłania!'),
-        });
+    // The code redeems into a single-session usertoken - sending it to every
+    // configured host would just have them race to kick each other's session,
+    // so only the first (primary) target gets it.
+    const host = fanfilmHosts()[0];
+    if (!host) {
+        return false;
     }
+    const data = {host: 'netmirror.gg', cookies: [{name: 'otp_code', value: digits.join('')}]};
+    GM.xmlHttpRequest({
+        method: "POST",
+        url: `http://${host}/cookies`,
+        data: JSON.stringify(data),
+        headers: {"Content-Type": "application/json;charset=UTF-8"},
+        onload: () => fanfilmMessage('success', '✅ Wysłano'),
+        onerror: () => fanfilmMessage('error', '❌ Błąd wysyłania!'),
+    });
     return true;
 }
 
