@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         FanFilm
 // @namespace    http://tampermonkey.net/
-// @version      0.1.20260805.1
+// @version      0.1.20260815.2
 // @description  Web service
 // @author       kpl-team
 // @match        http*://imdb.com/*
+// @match        http*://*.imdb.com/*
 // @match        http*://cda-hd.cc/*
 // @match        http*://zaluknij.cc/*
 // @match        http*://filmyonline.cc/*
@@ -156,6 +157,66 @@ async function fanfilmCookies(options)
     };
     // console.log("[FanFilm] Zebrane dane:", data);
     return data
+}
+
+// __NEXT_DATA__ ma prawdziwe id (`ur#######`) - adres `p.xxxxxxxx` z paska to tylko kosmetyka,
+// której nie przyjmuje API.
+function fanfilmExtractImdbUser()
+{
+    if (!location.hostname.endsWith('imdb.com')) {
+        return null;
+    }
+    try {
+        const el = document.getElementById('__NEXT_DATA__');
+        const pageProps = el && JSON.parse(el.textContent)?.props?.pageProps;
+        const id = pageProps?.userId;
+        if (!/^ur\d+$/.test(id)) {
+            return null;
+        }
+        const nick = pageProps?.userNickName?.value || id;
+        return {id, nick};
+    } catch (e) {
+        return null;
+    }
+}
+
+// Leci przez /cookies (jak reszta ciasteczek) na każdą skonfigurowaną instancję Kodi - tam,
+// zgodnie z const.py (web_server.cookies['www.imdb.com'][':imdb_user_id']), id jest dopisywane
+// do imdb.user (append), nigdy nie nadpisuje - to pole może już mieć innych userów.
+async function fanfilmAddImdbUser(urId)
+{
+    const hosts = fanfilmHosts();
+    if (!hosts.length) {
+        fanfilmMessage('error', '❌ Brak skonfigurowanego hosta!');
+        return;
+    }
+    // Pełny fanfilmCookies() (nie tylko {host, imdb_user_id}!) - inaczej pusta lista ciasteczek
+    // wyzerowałaby przy okazji imdb.at-main (ten sam wpis 'www.imdb.com' obsługuje oba pola).
+    const data = JSON.stringify({...await fanfilmCookies(), imdb_user_id: urId});
+    const send = (host) => new Promise((resolve, reject) => {
+        GM.xmlHttpRequest({
+            method: "POST",
+            url: `http://${host}/cookies`,
+            data: data,
+            headers: {"Content-Type": "application/json;charset=UTF-8"},
+            onload: resolve,
+            onerror: reject,
+        });
+    });
+    const results = await Promise.allSettled(hosts.map(send));
+    results.forEach((r, i) => {
+        if (r.status === 'rejected') {
+            console.error(`[FanFilm] Błąd dodawania imdb.user (${hosts[i]}):`, r.reason);
+        }
+    });
+    const errors = results.filter(r => r.status === 'rejected').length;
+    if (errors === hosts.length) {
+        fanfilmMessage('error', '❌ Błąd wysyłania!');
+    } else if (errors > 0) {
+        fanfilmMessage('partial', `⚠️ Wysłano: ${hosts.length - errors}/${hosts.length}`);
+    } else {
+        fanfilmMessage('success', '✅ Wysłano');
+    }
 }
 
 async function fanfilmSendOne(host, options)
@@ -433,6 +494,9 @@ async function fanfilmUpdate(options)
             Domyślny port: ${fanfilmDefaultPort}.
           </div>
           <button id="ff-send">Wyślij</button>
+          <div id="ff-imdb-user" style="display:none; margin-top:8px;">
+            <button id="ff-imdb-user-add"></button>
+          </div>
           <div id="ff-status"></div>
         </div>
       </div>
@@ -445,6 +509,15 @@ async function fanfilmUpdate(options)
     const ffInput = fanfilmRoot.getElementById("ff-ip");
     const ffSend = fanfilmRoot.getElementById("ff-send");
     const ffStatus = fanfilmRoot.getElementById("ff-status");
+    const ffImdbUser = fanfilmRoot.getElementById("ff-imdb-user");
+    const ffImdbUserAdd = fanfilmRoot.getElementById("ff-imdb-user-add");
+
+    const imdbUser = fanfilmExtractImdbUser();
+    if (imdbUser) {
+        ffImdbUserAdd.textContent = `Dodaj ${imdbUser.nick} jako imdb.user`;
+        ffImdbUser.style.display = "block";
+        ffImdbUserAdd.addEventListener("click", () => fanfilmAddImdbUser(imdbUser.id));
+    }
 
     // Zmienne dla drag&drop
     let isDragging = false, offsetX = 0, offsetY = 0;
