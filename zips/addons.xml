@@ -8,7 +8,7 @@
         <import addon="plugin.video.youtube" optional="true"/>
         <import addon="script.module.pyxbmct"/>
         <import addon="script.module.resolveurl"/>
-        <import addon="script.fanfilm.media" version="2026.06.15.0"/>
+        <import addon="script.fanfilm.media" version="2026.08.31.0"/>
         <import addon="script.module.inputstreamhelper"/>
         <import addon="script.module.myconnpy"/>
     </requires>
@@ -38,7 +38,7 @@
         </news>
     </extension>
 </addon>
-<addon id="script.fanfilm.media" version="2026.06.15.0" name="FanFilm Themepack" provider-name="FF Team">
+<addon id="script.fanfilm.media" version="2026.08.31.0" name="FanFilm Themepack" provider-name="FF Team">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
